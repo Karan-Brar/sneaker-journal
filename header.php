@@ -3,6 +3,7 @@ session_start();
 ?>
 
 <nav>
+    <h3><a href="index.php">IceFeet</a></h3>
     <?php if (isset($_SESSION['logged_in_user'])) : ?>
         <h4>Hello <?= $_SESSION['logged_in_user']['username'] ?></h4>
         <?php if ($_SESSION['logged_in_user']['admin_access'] === 1) : ?>

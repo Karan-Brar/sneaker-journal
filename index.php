@@ -109,10 +109,8 @@ if ($sorting === "none") {
                     <img src="<?= $shoe['shoe_img_path'] ?>" alt="Shoe Image" width="300" height="200">
                 <?php endif ?>
                 <div>
-                    <h5>Release Date - <?= $shoe['shoe_drop_date'] ?></h5>
                     <h5>Price - $<?= $shoe['shoe_price'] ?></h5>
                     <p>Posted on - <?= $shoe['shoe_posting_date'] ?></p>
-                    <p>Last Updated on - <?= $shoe['shoe_posting_date'] ?></p>
                 </div>
             </div>
         <?php endforeach ?>
