@@ -31,7 +31,7 @@ if (!isset($_GET['id'])) {
     $statement->execute();
     $brandname = $statement->fetch();
 
-    $query = "SELECT * FROM comment s WHERE shoe_id=:id";
+    $query = "SELECT * FROM comment s WHERE shoe_id=:id ORDER BY comment_publish_date DESC";
     $statement = $db->prepare($query);
     $statement->bindValue(':id', intval($shoe_id));
     $statement->execute();
@@ -78,13 +78,26 @@ if (!isset($_GET['id'])) {
 
     <div>
         <h2>Comments</h2>
-        <<?php foreach ($comments as $comment) : ?>
+        <?php foreach ($comments as $comment) : ?>
+            <?php
+                $query = "SELECT u.username FROM comment c JOIN user u ON c.user_id=u.user_id WHERE     comment_id=:id";
+                $statement = $db->prepare($query);
+                $statement->bindValue(':id', intval($comment['comment_id']));
+                $statement->execute();
+                $comment_user = $statement->fetch();
+
+                $comment_timestamp = $comment['comment_publish_date'];
+                $comment_date = new DateTime($comment_timestamp);
+                $comment_date = $comment_date->format('h:i A Y-m-d');
+            ?>
             <div>
-                <?php $query = "SELECT u.username FROM comment c JOIN user u ON c.user_id=u.user_id WHERE comment_id=:id"; ?>
-                <h4></h4>
-            </div>              
-        <?php endforeach ?>
+                <h4><?= $comment_user['username'] ?></h4>
+                <h4><?= $comment_date ?></h4>
+                <p><?= $comment['comment_text'] ?></p>
+            </div>
     </div>
+<?php endforeach ?>
+</div>
 </body>
 
 </html>
