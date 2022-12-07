@@ -3,7 +3,7 @@
 
 if (!isset($_POST['command'])) {
     header("Location: ./register.php?invalid-user=true");
-    exit;
+    
 } else {
     $command = trim(filter_input(INPUT_POST, 'command', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
@@ -16,10 +16,10 @@ if (!isset($_POST['command'])) {
 
         if (strlen($username) < 1 || strlen($pass) < 1 || strlen($repass) < 1) {
             header("Location: ./register.php?invalid-user=true");
-            exit;
+            
         } elseif ($pass !== $repass) {
             header("Location: ./register.php?invalid-user=true");
-            exit;
+            
         } else {
             $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
             $query = "INSERT INTO user (username, password) VALUES (:username, :password)";
@@ -38,14 +38,13 @@ if (!isset($_POST['command'])) {
             }
 
             header("Location: ./login.php");
-            exit;
+            
         }
     }
     else if($command === "Update")
     {
-        if (!isset($_POST['name']) || !isset($_POST['id'])) {
-            header("Location: ./users.php?invalid-request=true");
-            exit;
+        if (!isset($_POST['name'])) {
+            header("Location: ./edituser.php?id={$_POST['id']}&invalid-user=true");
         } else {
             $username = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -67,7 +66,7 @@ if (!isset($_POST['command'])) {
             }
 
             if (strlen($username) < 1) {
-                header("Location: ./users.php?invalid-request=true");
+                header("Location: ./edituser.php?id={$_POST['id']}&invalid-user=true");
             } else {
                 $query = "UPDATE user SET username = :username, admin_access = :admin_access  WHERE user_id = :user_id";
                 $statement = $db->prepare($query);
@@ -77,14 +76,11 @@ if (!isset($_POST['command'])) {
                 $statement->execute();
 
                 header("Location: ./users.php");
-                exit;
+                
             }
         }
     } elseif ($command === "Delete") {
-        if (!isset($_POST['id'])) {
-            header("Location: ./edituser.php?invalid-request=true");
-            exit;
-        } else {
+
             $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
             $query = "DELETE FROM user WHERE user_id = :user_id";
@@ -93,8 +89,6 @@ if (!isset($_POST['command'])) {
             $statement->execute();
 
             header("Location: ./users.php");
-            exit;
-        }
     }
 }
 

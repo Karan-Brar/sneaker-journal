@@ -2,7 +2,7 @@
 
 if (!isset($_POST['command'])) {
     header("Location: ./index.php");
-    exit;
+    
 } else {
     $command = trim(filter_input(INPUT_POST, 'command', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
@@ -11,13 +11,13 @@ if (!isset($_POST['command'])) {
     if ($command === "Create") {
         if (!isset($_POST['name'])) {
             header("Location: ./newbrand.php?invalid-brand=true");
-            exit;
+            
         } else {
             $brand_name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
             if (strlen($brand_name) < 1) {
                 header("Location: ./newbrand.php?invalid-brand=true");
-                exit;
+                
             } else {
                 $query = "INSERT INTO brand (brand_name) VALUES (:name)";
                 $statement = $db->prepare($query);
@@ -26,20 +26,20 @@ if (!isset($_POST['command'])) {
                 $statement->execute();
 
                 header("Location: ./brands.php");
-                exit;
+                
             }
         }
     } elseif ($command === "Update") {
-        if (!isset($_POST['name'])|| !isset($_POST['id'])) {
-            header("Location: ./editbrand.php?invalid-brand=true");
-            exit; 
+        if (!isset($_POST['name'])) {
+            header("Location: ./editbrand.php?id={$_POST['id']}&invalid-brand=true");
+             
         } else {
             $brand_name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $brand_id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
             if (strlen($brand_name) < 1) 
             {
-                header("Location: ./editbrand.php?invalid-brand=true");
+                header("Location: ./editbrand.php?id={$_POST['id']}&invalid-brand=true");
             } 
             else 
             {
@@ -50,9 +50,17 @@ if (!isset($_POST['command'])) {
                 $statement->execute();
 
                 header("Location: ./brands.php");
-                exit;
             }
         }
+    } elseif ($command === "Delete") {
+            $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+
+            $query = "DELETE FROM brand WHERE brand_id = :brand_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':brand_id', $id, PDO::PARAM_INT);
+            $statement->execute();
+
+            header("Location: ./brands.php");
     }
 }
 

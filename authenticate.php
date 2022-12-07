@@ -2,7 +2,7 @@
 
 if (!isset($_POST['command'])) {
     header("Location: ./login.php");
-    exit;
+    
 }
 else
 {
@@ -13,7 +13,7 @@ else
 
     if (strlen($username) < 1 || strlen($pass) < 1) {
         header("Location: ./login.php?invalid-login=true");
-        exit;
+        
     }
     else
     {
@@ -27,7 +27,7 @@ else
         if(is_null($user))
         {
             header("Location: ./login.php?invalid-login=true");
-            exit;
+            
         }
         else
         {
@@ -36,12 +36,12 @@ else
                 session_start();
                 $_SESSION['logged_in_user'] = $user;
                 header("Location: ./index.php");
-                exit;
+                
             }
             else
             {
                 header("Location: ./login.php?invalid-login=true");
-                exit;
+                
             }
         }
     }

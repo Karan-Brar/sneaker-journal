@@ -6,7 +6,7 @@ use \Gumlet\ImageResize;
 if (!isset($_POST['command'])) 
 {
     header("Location: ./index.php");
-    exit;
+    
 } else 
 {
     $command = trim(filter_input(INPUT_POST, 'command', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
@@ -18,7 +18,7 @@ if (!isset($_POST['command']))
     {
         if (!isset($_POST['name']) || !isset($_POST['description']) || !isset($_POST['price']) || !isset($_POST['releaseDate']) || !isset($_POST['brands'])) {
             header("Location: ./newpost.php?invalid-post=true");
-            exit;
+            
         } 
         else 
         {       
@@ -39,7 +39,7 @@ if (!isset($_POST['command']))
                 else
                 {
                     header("Location: ./newpost.php?invalid-post=true");
-                    exit;
+                    
                 }
             } else
             {
@@ -59,7 +59,7 @@ if (!isset($_POST['command']))
 
             if (strlen($name) < 1 || strlen($description) < 1 || !filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT)) {
                 header("Location: ./newpost.php?invalid-post=true");
-                exit;
+                
             } else 
             {
                 $query = "INSERT INTO shoe (shoe_name, shoe_description, shoe_drop_date, shoe_price, shoe_img_path, brand_id, user_id) VALUES (:shoe_name, :shoe_description, :shoe_drop_date, :shoe_price, :shoe_img_path, :brand_id, :user_id)";
@@ -75,15 +75,15 @@ if (!isset($_POST['command']))
                 $statement->execute();
 
                 header("Location: ./index.php");
-                exit;
+                
             }
         }
     } 
     elseif ($command === "Update") 
     {
-        if (!isset($_POST['id']) || !isset($_POST['name']) || !isset($_POST['description']) || !isset($_POST['price']) || !isset($_POST['releaseDate']) || !isset($_POST['brands'])) {
+        if (!isset($_POST['name']) || !isset($_POST['description']) || !isset($_POST['price']) || !isset($_POST['releaseDate']) || !isset($_POST['brands'])) {
             header("Location: ./editpost.php?id={$_POST['id']}&invalid-post=true");
-            exit;
+            
         } else {
             $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
 
@@ -105,8 +105,7 @@ if (!isset($_POST['command']))
                             $resized_img->save($img_path);
                             $shoe_img_path = $img_path;
                         } else {
-                            header("Location: ./editpost.php?id={$_POST['id']}&invalid-post=true");
-                            exit;
+                            header("Location: ./editpost.php?id={$_POST['id']}&invalid-post=true");                           
                         }
                     }
                     else
@@ -133,7 +132,7 @@ if (!isset($_POST['command']))
 
             if (strlen($name) < 1 || strlen($description) < 1 || !filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT)) {
                 header("Location: ./editpost.php?id={$_POST['id']}&invalid-post=true");
-                exit;
+                
             } else {
                 $query = "UPDATE shoe SET shoe_name = :shoe_name, shoe_description = :shoe_description, shoe_drop_date = :shoe_drop_date, shoe_price = :shoe_price, shoe_img_path = :shoe_img_path, brand_id = :brand_id WHERE shoe_id = :shoe_id";
                 $statement = $db->prepare($query);
@@ -147,16 +146,12 @@ if (!isset($_POST['command']))
                 $statement->execute();
 
                 header("Location: ./index.php");
-                exit;
+                
             }
         }
     }
     elseif ($command === "Delete") 
     {
-        if (!isset($_POST['id'])) {
-            header("Location: ./index.php");;
-            exit;
-        } else {
             $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
             $query = "DELETE FROM shoe WHERE shoe_id = :shoe_id";
@@ -165,11 +160,7 @@ if (!isset($_POST['command']))
             $statement->execute();
 
             header("Location: ./index.php");
-            exit;
-        }
+            
+
     }
 }
-
-
-?>
-
