@@ -52,74 +52,88 @@ if (!isset($_GET['id'])) {
 
 <body>
     <?php require 'header.php' ?>
-    <div>
-        <h2><?= $post['shoe_name'] ?></h2>
-        <?php if (!is_null($post['shoe_img_path'])) : ?>
-            <img src="<?= $post['shoe_img_path'] ?>" alt="Shoe Image" width="300" height="200">
-        <?php endif ?>
-        <?php
-        $posting_timestamp = $post['shoe_posting_date'];
-        $posting_date = new DateTime($posting_timestamp);
-        $posting_date = $posting_date->format('Y-m-d');
-
-        $update_timestamp = $post['shoe_update_date'];
-        $update_date = new DateTime($update_timestamp);
-        $update_date = $update_date->format('Y-m-d');
-        ?>
-        <p>Posting By - <?= $username['username'] ?></p>
-        <p>Posted on - <?= $posting_date ?></p>
-        <p>Last Updated - <?= $update_date ?></p>
-        <div>
-            <span>Price - $<?= $post['shoe_price'] ?></span>
-            <span>Manufacturer - <?= $brandname['brand_name'] ?></span>
-        </div>
-        <h4><?= $post['shoe_description'] ?></h4>
-    </div>
-
-    <div>
-        <h2>Comments</h2>
-        <?php if (isset($_SESSION['logged_in_user'])) : ?>
-            <div>
-                <?php if (isset($_GET['invalid-comment'])) : ?>
-                    <h2>Invalid Comment!</h2>
+    <div class="container">
+        <div class="col d-flex justify-content-center">
+            <div class="card text-center mt-5" style="width: 30rem;">
+                <?php if (!is_null($post['shoe_img_path'])) : ?>
+                    <img class="card-img-top" src=" <?= $post['shoe_img_path'] ?>" alt="Shoe Image">
+                <?php else : ?>
+                    <img class="card-img-top" src=" ./uploads/No_image_available.png" alt="Shoe Image" class="card-img" style="width: 14rem;" height="180">
                 <?php endif ?>
-                <form action="processcomment.php" method="post">
-                    <input type="hidden" name="shoe_id" value="<?= $post['shoe_id'] ?>">
-                    <div>
-                        <label for="comment">Post a Comment</label>
-                        <textarea name="comment" id="description" cols="30" rows="10" required="required"></textarea>
-                        <input type="submit" name="command" value="Create" id="createBtn">
-                    </div>
-                </form>
+                <?php
+                $posting_timestamp = $post['shoe_posting_date'];
+                $posting_date = new DateTime($posting_timestamp);
+                $posting_date = $posting_date->format('Y-m-d');
+
+                $update_timestamp = $post['shoe_update_date'];
+                $update_date = new DateTime($update_timestamp);
+                $update_date = $update_date->format('Y-m-d');
+                ?>
+                <div class="card-body">
+                    <h5 class="card-title"><?= $post['shoe_name'] ?></h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Posting By <?= $username['username'] ?></h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Posted on <?= $posting_date ?></li>
+                        <li class="list-group-item">Last Updated on <?= $update_date ?></li>
+                    </ul>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">Priced at $<?= $post['shoe_price'] ?></li>
+                        <li class="list-inline-item">Manufactured by <?= $brandname['brand_name'] ?></li>
+                    </ul>
+                    <blockquote class="blockquote">
+                        <p><?= $post['shoe_description'] ?></p>
+                    </blockquote>
+                </div>
             </div>
-            <?php foreach ($comments as $comment) : ?>
-                <?php if ($comment['visible_comment'] === 1) : ?>
-                    <?php
-                    $query = "SELECT u.username FROM comment c JOIN user u ON c.user_id=u.user_id WHERE     comment_id=:id";
-                    $statement = $db->prepare($query);
-                    $statement->bindValue(':id', intval($comment['comment_id']));
-                    $statement->execute();
-                    $comment_user = $statement->fetch();
+        </div>
 
-                    $comment_timestamp = $comment['comment_publish_date'];
-                    $comment_date = new DateTime($comment_timestamp);
-                    $comment_date = $comment_date->format('h:i A Y-m-d');
-                    ?>
-                    <div>
-                        <form action="processcomment.php" method="post">
-                            <h4><?= $comment_user['username'] ?></h4>
-                            <h4><?= $comment_date ?></h4>
-                            <p><?= $comment['comment_text'] ?></p>
-                            <?php if ($comment['user_id'] === $_SESSION['logged_in_user']['user_id'] || $_SESSION['logged_in_user']['admin_access'] === 1) : ?>
-                                <a href="editcomment.php?id=<?= $comment['comment_id'] ?>">Edit Comment</a>
-                            <?php endif ?>
-                        </form>
+        <div class="mt-4" style="width: 30rem; margin:auto">
+            <h2>Comments</h2>
+            <?php if (isset($_SESSION['logged_in_user'])) : ?>
+                <?php if (isset($_GET['invalid-comment'])) : ?>
+                    <div class=" alert alert-danger mt-3" role="alert">
+                        Invalid Comment!
                     </div>
                 <?php endif ?>
-            <?php endforeach ?>
-        <?php else : ?>
-            <h3>You need to login to view or post comments!</h3>
-        <?php endif ?>
+                <form action="processcomment.php" method="post" class="mb-4">
+                    <input type="hidden" name="shoe_id" value="<?= $post['shoe_id'] ?>">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Post a Comment</label>
+                        <textarea name="comment" id="description" class="form-control" rows="3" required="required"></textarea>
+                    </div>
+                    <button type="submit" name="command" value="Create" class="btn btn-primary">Comment</button>
+                </form>
+                <?php foreach ($comments as $comment) : ?>
+                    <?php if ($comment['visible_comment'] === 1) : ?>
+                        <?php
+                        $query = "SELECT u.username FROM comment c JOIN user u ON c.user_id=u.user_id WHERE     comment_id=:id";
+                        $statement = $db->prepare($query);
+                        $statement->bindValue(':id', intval($comment['comment_id']));
+                        $statement->execute();
+                        $comment_user = $statement->fetch();
+
+                        $comment_timestamp = $comment['comment_publish_date'];
+                        $comment_date = new DateTime($comment_timestamp);
+                        $comment_date = $comment_date->format('h:i A Y-m-d');
+                        ?>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $comment_user['username'] ?></h5>
+                                <h6 class="card-subtitle mb-2 text-muted"><?= $comment_date ?></h6>
+                                <p class="card-text"><?= $comment['comment_text'] ?></p>
+                                <?php if ($comment['user_id'] === $_SESSION['logged_in_user']['user_id'] || $_SESSION['logged_in_user']['admin_access'] === 1) : ?>
+                                    <a href="editcomment.php?id=<?= $comment['comment_id'] ?>" class="btn btn-secondary">Edit Comment</a>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                <?php endforeach ?>
+            <?php else : ?>
+                <div class=" alert alert-warning" role="alert">
+                    Please Login to View or Post Comments!
+                </div>
+            <?php endif ?>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

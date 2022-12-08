@@ -29,49 +29,53 @@ $brands = $statement->fetchAll();
 
 <body>
     <?php require 'header.php' ?>
-    <?php if (isset($_GET['invalid-post'])) : ?>
-        <h2>Invalid Post!</h2>
-    <?php endif ?>
-    <form action="processpost.php" method="post" id="newPost" enctype="multipart/form-data">
-        <div>
-            <label for="name">Shoe Name: </label>
-            <input type="text" name="name" id="name" required="required">
-        </div>
+    <div class="container">
+        <?php if (isset($_GET['invalid-post'])) : ?>
+            <div class="alert alert-danger mt-3" role="alert">
+                Invalid Post!
+            </div>
+        <?php endif ?>
+        <form class="mt-4" action="processpost.php" method="post" id="newPost" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="name">Shoe Name</label>
+                <input class="form-control" type="text" name="name" id="name" required="required">
+            </div>
 
-        <div>
-            <label for="description">Shoe Info: </label>
-            <textarea name="description" id="description" cols="30" rows="10" required="required"></textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Shoe Info</label>
+                <textarea class="form-control" name="description" id="description" cols="30" rows="10" required="required"></textarea>
+            </div>
 
-        <div>
-            <label for="price">Shoe Price: </label>
-            $<input type="number" name="price" id="price" required="required">
-        </div>
+            <div class="mb-3">
+                <label class="form-label" for="price">Shoe Price($)</label>
+                <input class="form-control" type="number" name="price" id="price" required="required">
+            </div>
 
-        <div>
-            <label for="releaseDate">Release Date: </label>
-            <input type="date" id="releaseDate" name="releaseDate" required="required">
-        </div>
+            <div class="mb-3">
+                <label class="form-label" for="releaseDate">Release Date: </label>
+                <input class="form-control" type="date" id="releaseDate" name="releaseDate" required="required">
+            </div>
 
-        <div>
-            <label for="brands">Shoe Brand: </label>
-            <select name="brands" id="brands" required="required">
-                <?php foreach ($brands as $brand) : ?>
-                    <option value="<?= $brand['brand_id'] ?>"><?= $brand['brand_name'] ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+            <div class="mb-3">
+                <label class="form-label" for="brands">Shoe Brand: </label>
+                <select class="form-control" name="brands" id="brands" required="required">
+                    <?php foreach ($brands as $brand) : ?>
+                        <option value="<?= $brand['brand_id'] ?>"><?= $brand['brand_name'] ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
 
-        <div>
-            <label for='image'>Sneaker Image (Optional): </label>
-            <input type='file' name='image' id='image'>
-        </div>
+            <div class="mb-3">
+                <label class="form-label" for='image'>Sneaker Image (Optional): </label>
+                <input class="form-control" type='file' name='image' id='image'>
+            </div>
 
-
-
-        <input type="submit" name="command" value="Create" id="createBtn">
-        <a href="index.php">Cancel</a>
-    </form>
+            <div class="mb-3">
+                <button type="submit" name="command" value="Create" class="btn btn-primary">Create</button>
+                <a class="btn btn-light" role="button" href="index.php">Cancel</a>
+            </div>
+        </form>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
 </body>

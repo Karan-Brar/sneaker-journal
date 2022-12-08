@@ -47,27 +47,29 @@ if (!isset($_GET['id'])) {
     <?php require 'header.php' ?>
     <div class="container">
         <?php if (isset($_GET['invalid-user'])) : ?>
-            <h2>Invalid User Edit!</h2>
+            <div class="alert alert-danger mt-3" role="alert">
+                Invalid User Edit!
+            </div>
         <?php endif ?>
-        <form action="processuser.php" method="post" id="editBrand">
+        <form action="processuser.php" method="post" class="mt-3">
             <input type="hidden" name="id" value="<?= $user_id ?>" />
-            <div>
-                <label for="name">User Name: </label>
-                <input type="text" name="name" id="name" value="<?= $user['username'] ?>">
+            <div class="mb-3">
+                <label for="name" class="form-label">User Name</label>
+                <input class="form-control" ype="text" name="name" id="name" value="<?= $user['username'] ?>">
             </div>
 
-            <div>
-                <label for="admin-access">Admin Access: </label>
+            <div class="mb-3">
                 <?php if ($user['admin_access'] === 1) : ?>
-                    <input type="checkbox" name="admin-access" id="admin-access" value="Yes" checked>
+                    <input class="form-check-input" type="checkbox" name="admin-access" value="Yes" checked>
                 <?php else : ?>
-                    <input type="checkbox" name="admin-access" id="admin-access" value="Yes">
+                    <input class="form-check-input" type="checkbox" name="admin-access">
                 <?php endif ?>
+                <label for="admin-access" class="form-check-label">Admin Access</label>
             </div>
 
-            <input type="submit" name="command" value="Update" id="updateBtn">
-            <input type="submit" name="command" value="Delete" id="deleteBtn">
-            <a href="users.php">Cancel</a>
+            <button type="submit" name="command" value="Update" class="btn btn-primary">Update</button>
+            <button type="submit" name="command" value="Delete" class="btn btn-danger">Delete</button>
+            <a class="btn btn-light" role="button" href="users.php">Cancel</a>
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

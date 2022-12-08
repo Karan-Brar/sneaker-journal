@@ -86,9 +86,9 @@ $brands = $statement->fetchAll();
 <body>
     <?php require 'header.php' ?>
     <div class="container">
-        <form action="index.php?searchrequest=true" method="post">
-            <input type="text" name="search-value" id="search" placeholder="Search For Shoes..">
-            <input type="submit" value="Search">
+        <form class="mt-3" action="index.php?searchrequest=true" method="post">
+            <input class="form-control" type="text" name="search-value" id="search" placeholder="Search For Shoes.." style="width:20rem;">
+            <button type="submit" class="btn btn-primary mt-2" value="Search">Search</button>
         </form>
         <div class="dropdown mb-3 mt-3">
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Navigate by Brand</a>

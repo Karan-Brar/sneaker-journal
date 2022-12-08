@@ -33,15 +33,14 @@ $users = $statement->fetchAll();
 
 <body>
     <?php require 'header.php' ?>
-    <div>
-        <a href="newbrand.php">Create New User</a>
-        <h1>User List - </h1>
-        <?php foreach ($users as $user) : ?>
-            <ul>
-                <li><?= $user['username'] ?></li>
-                <a href="edituser.php?id=<?= $user['user_id'] ?>">Edit User</a>
-            </ul>
-        <?php endforeach ?>
+    <div class="container">
+        <a class="btn btn-primary mb-3 mt-3" href="register.php" role="button">Create New User</a>
+        <h1 class="display-4">User List</h1>
+        <div class="list-group">
+            <?php foreach ($users as $user) : ?>
+                <a href="edituser.php?id=<?= $user['user_id'] ?>" class="list-group-item list-group-item-action"><?= $user['username'] ?></a>
+            <?php endforeach ?>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

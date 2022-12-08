@@ -48,21 +48,15 @@ if (!isset($_POST['command'])) {
         } else {
             $username = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+
+            $admin_access = 0;
             
             if(isset($_POST['admin-access']))
-            {
+            { 
                 if($_POST['admin-access'] === "Yes")
                 {
                     $admin_access = 1;
                 }
-                else
-                {
-                    $admin_access = 0;
-                }
-            }
-            else
-            {
-                $admin_access = 0;
             }
 
             if (strlen($username) < 1) {
@@ -71,12 +65,12 @@ if (!isset($_POST['command'])) {
                 $query = "UPDATE user SET username = :username, admin_access = :admin_access  WHERE user_id = :user_id";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':username', $username);
-                $statement->bindValue(':admin_access', $admin_access);
+                $statement->bindValue(':admin_access', $admin_access, PDO::PARAM_INT );
                 $statement->bindValue(':user_id', $id);
                 $statement->execute();
 
-                header("Location: ./users.php");
-                
+                header("Location: ./users.php?admin-access={$admin_access}");
+                exit;                 
             }
         }
     } elseif ($command === "Delete") {
