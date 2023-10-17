@@ -88,10 +88,11 @@ if (!isset($_POST['command']))
             $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
 
                 if (isset($_POST['no-image'])) {
-                    if($_POST['no-image'] === "Yes")
-                    {
+              
                         $shoe_img_path = null;
-                    }                    
+
+                        unlink($_POST['current_path']);
+                                     
                 } else {
                     if ($image_upload_detected) {
                         $image_filename        = $_FILES['image']['name'];
@@ -130,20 +131,24 @@ if (!isset($_POST['command']))
             $chosenBrand = trim(filter_input(INPUT_POST, 'brands', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $id  = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
+        
+
             if (strlen($name) < 1 || strlen($description) < 1 || !filter_input(INPUT_POST, 'price', FILTER_VALIDATE_INT)) {
                 header("Location: ./editpost.php?id={$_POST['id']}&invalid-post=true");
                 
             } else {
-                $query = "UPDATE shoe SET shoe_name = :shoe_name, shoe_description = :shoe_description, shoe_drop_date = :shoe_drop_date, shoe_price = :shoe_price, shoe_img_path = :shoe_img_path, brand_id = :brand_id WHERE shoe_id = :shoe_id";
-                $statement = $db->prepare($query);
-                $statement->bindValue(':shoe_name', $name);
-                $statement->bindValue(':shoe_description', $description);
-                $statement->bindValue(':shoe_drop_date', $releaseDate);
-                $statement->bindValue(':shoe_price', $price, PDO::PARAM_INT);
-                $statement->bindValue(':shoe_img_path', $shoe_img_path);
-                $statement->bindValue(':brand_id', $chosenBrand, PDO::PARAM_INT);
-                $statement->bindValue(':shoe_id', $id);
-                $statement->execute();
+                $qry = "UPDATE shoe SET shoe_name = :shoe_name, shoe_description = :shoe_description, shoe_drop_date = :shoe_drop_date, shoe_price = :shoe_price, shoe_img_path = :shoe_img_path, brand_id = :brand_id WHERE shoe_id = :shoe_id";
+                $stm = $db->prepare($qry);
+                $stm->bindValue(':shoe_id', $id);
+
+                $stm->bindValue(':shoe_name', $name);
+                $stm->bindValue(':shoe_description', $description);
+                $stm->bindValue(':shoe_drop_date', $releaseDate);
+                $stm->bindValue(':shoe_price', $price, PDO::PARAM_INT);
+                $stm->bindValue(':shoe_img_path', $shoe_img_path);
+                $stm->bindValue(':brand_id', $chosenBrand, PDO::PARAM_INT);
+
+                $stm->execute();
 
                 header("Location: ./index.php");
                 
